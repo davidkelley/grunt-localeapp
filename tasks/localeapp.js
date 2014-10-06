@@ -152,28 +152,34 @@ module.exports = function(grunt) {
    * @param {Boolean} withLocale  Keep or remove the first yml key containaing the locale name (fr-FR: USER : ...)
    * @author Sylvain RAGOT {01/07/2014}
    */
-  function _formatJSON(files, withLocale) {
-    grunt.verbose.writeln('Formatting files to JSON');
-    var withLocale = withLocale || false;
+  function _formatJSON(files, toJS) {
+    toJS = toJS || false;
     var locales = files.files;
 
     for(var i in locales) {
       var locale = locales[i].split('.yml')[0];   // en_US.yml => en_US
       var file = 'config/locales/' + locale;
-      var json = (withLocale === true)
-        ? yaml.load(file + '.yml')
-        : yaml.load(file + '.yml')[locale];
+      var json = yaml.load(file + '.yml')[locale];
+      var content, filename;
+      if (toJS === true) {
+        content = 'var translate_' + locale.replace('-', '_') + ' = ' + JSON.stringify(json, null, 2) + ';';
+        filename = file.replace('-', '_') + '.js';
+      } else {
+        content = JSON.stringify(json, null, 2);
+        filename = file.replace('-', '_') + '.json';
+      }
 
-      fs.rename(file + '.yml', file.replace('-', '_') + '.json', function(err) {
+      fs.rename(file + '.yml', filename, function(err) {
         if ( err ) console.log('ERROR: ' + err);
       });
+
 
       // add metadata the output
       json._meta = {};
       json._meta.polledAt = new Date(files.polledAt * 1000).toString();
       json._meta.updatedAt = new Date(files.updatedAt * 1000).toString();
       json._meta.gem = version;
-      grunt.file.write(file.replace('-', '_') + '.json', JSON.stringify(json, null, 4));
+      grunt.file.write(filename, content);
     }
   }
 
@@ -207,9 +213,9 @@ module.exports = function(grunt) {
     _clean(['config', 'log']);
 
     // check requested output format
-    var availableFormats = ['yml', 'json'];
+    var availableFormats = ['yml', 'yaml', 'json', 'js'];
     if (availableFormats.indexOf(this.data.format) === -1) {
-      grunt.fail.fatal('There is no support for ' + this.data.format + ' yet. Please use one of the following : ' + availableFormats.join(', ') + '.')
+      grunt.fail.fatal('There is no support for ' + this.data.format + ' yet. Please use one of the following : ' + availableFormats.join(', ') + '.');
     }
 
     // retreive locales
@@ -220,13 +226,17 @@ module.exports = function(grunt) {
     // format output
     switch (this.data.format) {
       case 'js':
-      case 'json':
-        _formatJSON(files);
+        grunt.verbose.writeln('Formatting files to Javascript');
+        _formatJSON(files, true);
         break;
-
+      case 'json':
+        grunt.verbose.writeln('Formatting files to JSON');
+        _formatJSON(files, false);
+        break;
       case 'yml':
       case 'yaml':
       default:
+        grunt.verbose.writeln('Formatting files to YML');
         _formatYML(files);
         break;
     }

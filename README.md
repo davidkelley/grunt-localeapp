@@ -79,10 +79,11 @@ the project you are looking for.
 `format` : Basicly, _localeapp.com_ only exports to yaml format. This options indicates the desired
 output format. Available format are listed below :
 
-format | translation tool
------- | ----------------
-yml    | _native_
-json   | [yamljs](https://www.npmjs.org/package/yamljs)
+format | translation tool                               | comment
+------ | ---------------------------------------------- | ----------------------------------------------------
+yml    | _native_                                       |
+json   | [yamljs](https://www.npmjs.org/package/yamljs) |
+js     | [yamljs](https://www.npmjs.org/package/yamljs) | output in a variable: `var translate_en_US = {...};`
 
 `dest` : Destination folder where the locale files will be pulled (must end with a '/').
 
@@ -103,4 +104,12 @@ It is my very first grunt task, so please be indulgent and feel free to send me 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+**0.1.3** _(2014-10-06)_
+
+- Add new supported output format: **js**
+
+**0.1.2** _(2014-07-16)_
+
+- Pull files from localeapp
+- Supported output formats: **yml**, **json**

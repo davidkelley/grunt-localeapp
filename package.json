@@ -1,7 +1,7 @@
 {
   "name": "grunt-localeapp",
   "description": "Grunt task for localeapp.com service. It allows easy pulling translation files to yml or json format.",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/PredicSis/grunt-localeapp",
   "author": {
     "name": "Sylvain RAGOT",

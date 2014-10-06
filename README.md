@@ -2,8 +2,6 @@
 
 [![NPM](https://nodei.co/npm/grunt-localeapp.png)](https://nodei.co/npm/grunt-localeapp/)
 
-> last version : 0.1.0 (02/07/2014)
-
 Grunt task for http://www.localeapp.com service. Localeapp is a cloud service which provide a managment 
 interface for translation files. 
 
